@@ -333,14 +333,12 @@ $.widget("ui.selectmenu", {
 		this.index(this._selectedIndex());
 		
 		// needed when selectmenu is placed at the very bottom / top of the page
-        window.setTimeout(function() {
+       window.setTimeout(function() {
             self._refreshPosition();
         }, 200);
 		
 		// needed when window is resized
-		$(window).resize(function(){
-			self._refreshPosition();
-		});		
+       $(window).resize(jQuery.proxy(self._refreshPosition,this));
 	},
 	destroy: function() {
 		this.element.removeData(this.widgetName)
@@ -352,6 +350,9 @@ $.widget("ui.selectmenu", {
 		$('label[for='+this.newelement.attr('id')+']')
 			.attr('for',this.element.attr('id'))
 			.unbind('click');
+		
+		$(window).unbind('resize', this._refreshPosition);
+
 		this.newelement.remove();
 		// FIXME option.wrapper needs
 		this.list.remove();
